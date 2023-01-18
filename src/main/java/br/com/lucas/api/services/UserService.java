@@ -12,4 +12,6 @@ public interface UserService {
     List<UserData> findAll();
 
     UserData create(UserDataDTO userDataDTO);
+
+    UserData update(UserDataDTO userDataDTO);
 }
