@@ -7,6 +7,7 @@ import br.com.lucas.api.services.exceptions.ObjectNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,5 +21,10 @@ public class UserServiceImpl implements UserService {
         Optional<UserData> user = repository.findById(id);
 
         return user.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
+    }
+
+    @Override
+    public List<UserData> findAll() {
+        return repository.findAll();
     }
 }
