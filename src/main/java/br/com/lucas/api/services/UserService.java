@@ -14,4 +14,6 @@ public interface UserService {
     UserData create(UserDataDTO userDataDTO);
 
     UserData update(UserDataDTO userDataDTO);
+
+    void delete(Integer id);
 }
