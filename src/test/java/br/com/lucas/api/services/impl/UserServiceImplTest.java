@@ -30,7 +30,7 @@ class UserServiceImplTest {
     public static final String NAME     = "lucas";
     public static final String EMAIL    = "lucas@mail.com";
     public static final String PASSWORD = "1234";
-    public static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado";
+    public static final String OBJECT_NOT_FOUND = "Objeto não encontrado";
     @InjectMocks
     private UserServiceImpl service;
 
@@ -66,13 +66,13 @@ class UserServiceImplTest {
 
     @Test
     void whenFindByIdThenReturnObjectNotFoundException(){
-        when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException(OBJETO_NAO_ENCONTRADO));
+        when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException(OBJECT_NOT_FOUND));
 
         try {
             service.findById(ID);
         } catch (Exception ex) {
             assertEquals(ObjectNotFoundException.class, ex.getClass());
-            assertEquals(OBJETO_NAO_ENCONTRADO, ex.getMessage());
+            assertEquals(OBJECT_NOT_FOUND, ex.getMessage());
         }
     }
 
@@ -119,7 +119,17 @@ class UserServiceImplTest {
     }
 
     @Test
-    void update() {
+    void whenUpdateThenReturnSuccess() {
+        when(repository.save(any())).thenReturn(userData);
+
+        UserData response = service.update(userDataDTO);
+
+        assertNotNull(response);
+        assertEquals(UserData.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
