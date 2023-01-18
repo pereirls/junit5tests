@@ -3,6 +3,7 @@ package br.com.lucas.api.services.impl;
 import br.com.lucas.api.domain.UserData;
 import br.com.lucas.api.domain.dto.UserDataDTO;
 import br.com.lucas.api.repositories.UserRepository;
+import br.com.lucas.api.services.exceptions.DataIntegrityViolationException;
 import br.com.lucas.api.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -89,7 +92,30 @@ class UserServiceImplTest {
     }
 
     @Test
-    void create() {
+    void whenCreateThenReturnSuccess() {
+        when(repository.save(any())).thenReturn(userData);
+
+        UserData response = service.create(userDataDTO);
+
+        assertNotNull(response);
+        assertEquals(UserData.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
+    }
+
+    @Test
+    void whenCreateThenReturnDataIntegrityViolationException() {
+        when(repository.findByEmail(anyString())).thenReturn(userDataOptional);
+
+        try {
+            userDataOptional.get().setId(2);
+            service.create(userDataDTO);
+        } catch (Exception e){
+            assertEquals(DataIntegrityViolationException.class, e.getClass());
+            assertEquals("Email já cadastrado no sistema", e.getMessage());
+        }
     }
 
     @Test
