@@ -24,6 +24,13 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 class UserResourcesTest {
 
+    public static final int INDEX = 0;
+    public static final Integer ID = 1;
+    public static final String NAME = "lucas";
+    public static final String EMAIL = "lucas@mail.com";
+    public static final String PASSWORD = "1234";
+    public static final String OBJECT_NOT_FOUND = "Objeto não encontrado";
+    public static final String EMAIL_JA_CADASTRADO_NO_SISTEMA = "Email já cadastrado no sistema";
     @InjectMocks
     private UserResources userResources;
 
@@ -32,13 +39,6 @@ class UserResourcesTest {
 
     @Mock
     private UserService userService;
-
-    public static final Integer ID = 1;
-    public static final String NAME = "lucas";
-    public static final String EMAIL = "lucas@mail.com";
-    public static final String PASSWORD = "1234";
-    public static final String OBJECT_NOT_FOUND = "Objeto não encontrado";
-    public static final String EMAIL_JA_CADASTRADO_NO_SISTEMA = "Email já cadastrado no sistema";
 
     private UserData userData;
     private UserDataDTO userDataDTO;
@@ -80,15 +80,22 @@ class UserResourcesTest {
         assertEquals(ResponseEntity.class, response.getClass());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        assertEquals(ID, response.getBody().get(0).getId());
-        assertEquals(EMAIL, response.getBody().get(0).getEmail());
-        assertEquals(NAME, response.getBody().get(0).getName());
-        assertEquals(PASSWORD, response.getBody().get(0).getPassword());
+        assertEquals(ID, response.getBody().get(INDEX).getId());
+        assertEquals(EMAIL, response.getBody().get(INDEX).getEmail());
+        assertEquals(NAME, response.getBody().get(INDEX).getName());
+        assertEquals(PASSWORD, response.getBody().get(INDEX).getPassword());
 
     }
 
     @Test
-    void create() {
+    void whenCreateThenReturnCreated() {
+        when(userService.create(any())).thenReturn(userData);
+
+        ResponseEntity<UserDataDTO> response = userResources.create(userDataDTO);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getHeaders().get("Location"));
+        assertEquals(ResponseEntity.class, response.getClass());
     }
 
     @Test
