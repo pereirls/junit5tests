@@ -29,7 +29,6 @@ public class UserResources {
     @GetMapping
     public ResponseEntity<List<UserDataDTO>> findAll() {
 
-
         return ResponseEntity.ok().body(
                 userService.findAll()
                 .stream()
