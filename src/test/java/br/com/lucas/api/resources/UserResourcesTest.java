@@ -43,8 +43,8 @@ class UserResourcesTest {
     @Mock
     private UserService userService;
 
-    private UserData userData;
-    private UserDataDTO userDataDTO;
+    private UserData userData = new UserData();
+    private UserDataDTO userDataDTO = new UserDataDTO();
 
     @BeforeEach
     void setUp() {
