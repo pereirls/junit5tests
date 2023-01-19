@@ -21,14 +21,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class UserServiceImplTest {
 
-    public static final Integer ID      = 1;
-    public static final String NAME     = "lucas";
-    public static final String EMAIL    = "lucas@mail.com";
+    public static final Integer ID = 1;
+    public static final String NAME = "lucas";
+    public static final String EMAIL = "lucas@mail.com";
     public static final String PASSWORD = "1234";
     public static final String OBJECT_NOT_FOUND = "Objeto não encontrado";
     public static final String EMAIL_JA_CADASTRADO_NO_SISTEMA = "Email já cadastrado no sistema";
@@ -147,8 +150,15 @@ class UserServiceImplTest {
     }
 
     @Test
-    void delete() {
+    void deleteWithSuccess() {
+        when(repository.findById(anyInt())).thenReturn(userDataOptional);
+        doNothing().when(repository).deleteById(anyInt());
+
+        service.delete(ID);
+
+        verify(repository, times(1)).findById(anyInt());
     }
+
 
     private void startUsers() {
         userData = new UserData(ID, NAME, EMAIL, PASSWORD);
